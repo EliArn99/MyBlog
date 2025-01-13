@@ -57,3 +57,10 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+class PostTag(models.Model):
+    post = models.ForeignKey(Post, related_name='tags', on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, related_name='posts', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.post.title} - {self.tag.name}"
