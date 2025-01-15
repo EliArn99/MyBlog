@@ -1,4 +1,58 @@
 {% extends 'blog/index.html' %}
+{% load static %}
 {% block content %}
-   <h3>Chronicle Tales</h3>
+<div class="container mt-5">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+    <!-- Intro Section -->
+    <div class="intro-section text-center py-5">
+        <h1 class="display-4">Welcome to <span class="highlight">The Chronicles</span></h1>
+        <p class="lead">Here, every story, idea, and perspective is a chapter in an ever-evolving journey.</p>
+        <a href="{% url 'about' %}" class="btn btn-primary mt-3">Learn More</a>
+    </div>
+
+    <!-- Most Popular Posts Section -->
+    <div class="popular-posts-section py-5">
+        <h2 class="section-title text-center">Most Popular Posts</h2>
+        <div class="row">
+            {% for post in popular_posts %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card shadow-sm">
+                    <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.excerpt|truncatewords:15 }}</p>
+                        <a href="{{ post.get_absolute_url }}" class="btn btn-primary">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Most Recent Posts Section -->
+    <div class="recent-posts-section py-5 bg-light">
+        <h2 class="section-title text-center">Most Recent Posts</h2>
+        <div class="row">
+            {% for post in recent_posts %}
+            <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card shadow-sm">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="{{ post.image.url }}" class="card-img" alt="{{ post.title }}">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                <p class="card-text">{{ post.excerpt|truncatewords:20 }}</p>
+                                <a href="{{ post.get_absolute_url }}" class="btn btn-outline-primary btn-sm">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
