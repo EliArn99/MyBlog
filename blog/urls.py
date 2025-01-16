@@ -1,4 +1,5 @@
 # In your app's urls.py
+from django.contrib.auth import views as auth_views
 
 from django.urls import path
 from . import views  # Import your views here
@@ -16,5 +17,7 @@ urlpatterns = [
     path('category/gaming/', views.gaming, name='gaming'),  # Gaming page
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),  # Privacy Policy page
     path('login/', views.login_view, name='login'),  # Login page
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
     path('register/', views.register, name='register'),
 ]
