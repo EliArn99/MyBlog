@@ -1,7 +1,10 @@
 # Homepage View
-from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+
+from MyBlog.blog.forms import CustomUserCreationForm
+
+
 def home(request):
     return render(request, 'blog/home.html')
 
@@ -63,4 +66,12 @@ def login_view(request):
 
 
 def register(request):
-    return render(request, 'blog/register.html')
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your account has been created successfully! You can now log in.")
+            return redirect('login')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'blog/register.html', {'form': form})
