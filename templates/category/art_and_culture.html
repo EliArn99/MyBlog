@@ -1,9 +1,61 @@
-<!-- templates/category/book_reviews.html -->
-{% extends 'blog/index.html' %}
 
-{% block title %}Art Reviews{% endblock %}
+{% extends 'blog/index.html' %}
+{% load static %}
+
+{% block title %}Environment Review{% endblock %}
 
 {% block content %}
-    <h2>Book Reviews</h2>
-    <p>Welcome to our art reviews section!</p>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Art & Culture</h2>
+    <p class="text-center text-muted mb-5">
+        Welcome to our Environment section! Explore insightful reviews and discussions on environmental issues, sustainability practices, 
+        and green technologies. From renewable energy innovations to eco-friendly lifestyle tips, this is your hub for fostering a greener future.
+    </p>
+    <link rel="stylesheet" href="{% static 'category/art.css' %}">
+
+    <!-- Add Review Button (For Logged-In Users) -->
+    {% if user.is_authenticated %}
+    <div class="text-center mb-4">
+        <a href="#" class="btn btn-success btn-lg">Add Review</a>
+    </div>
+    {% endif %}
+
+    <div class="row gy-4">
+        <!-- Education Resource 1 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow h-100">
+                <img src="#" class="card-img-top" alt="Online Courses">
+                <div class="card-body">
+                    <h5 class="card-title">Online Courses</h5>
+                    <p class="card-text">Explore top-rated platforms offering courses across various disciplines.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Resource 2 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/education2.jpg' %}" class="card-img-top" alt="Skill-Building Apps">
+                <div class="card-body">
+                    <h5 class="card-title">Skill-Building Apps</h5>
+                    <p class="card-text">Discover apps that make learning new skills engaging and accessible.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Resource 3 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/education3.jpg' %}" class="card-img-top" alt="Study Techniques">
+                <div class="card-body">
+                    <h5 class="card-title">Study Techniques</h5>
+                    <p class="card-text">Master effective study techniques to maximize your learning potential.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
