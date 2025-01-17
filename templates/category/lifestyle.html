@@ -1,9 +1,60 @@
-<!-- templates/category/book_reviews.html -->
 {% extends 'blog/index.html' %}
+{% load static %}
 
-{% block title %}Lifestyle Reviews{% endblock %}
+{% block title %}Lifestyle{% endblock %}
 
 {% block content %}
-    <h2>Lifestyle Reviews</h2>
-    <p>Welcome to our lifestyle reviews section!</p>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Lifestyle Reviews</h2>
+    <p class="text-center text-muted mb-5">
+        Discover insights and reviews that inspire a balanced, fulfilling, and stylish life. 
+        From health and wellness tips to interior design trends, travel experiences, and everything in between, 
+        our Lifestyle section curates the best ideas to elevate your everyday living.
+    </p>
+    <link rel="stylesheet" href="{% static 'category/lifestyle.css' %}">
+    <!-- Add Review Button (For Logged-In Users) -->
+    {% if user.is_authenticated %}
+    <div class="text-center mb-4">
+        <a href="#" class="btn btn-success btn-lg">Add Review</a>
+    </div>
+    {% endif %}
+
+    <div class="row gy-4">
+        <!-- Lifestyle Article 1 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/lifestyle1.jpg' %}" class="card-img-top" alt="Wellness Tips">
+                <div class="card-body">
+                    <h5 class="card-title">Wellness Tips</h5>
+                    <p class="card-text">Explore how to build a mindful and healthy daily routine for overall well-being.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lifestyle Article 2 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/lifestyle2.jpg' %}" class="card-img-top" alt="Interior Design Trends">
+                <div class="card-body">
+                    <h5 class="card-title">Interior Design Trends</h5>
+                    <p class="card-text">Get inspired by the latest interior design trends to style your dream space.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lifestyle Article 3 -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/lifestyle3.jpg' %}" class="card-img-top" alt="Travel Experiences">
+                <div class="card-body">
+                    <h5 class="card-title">Travel Experiences</h5>
+                    <p class="card-text">Embark on journeys to picturesque locations and unique cultural experiences.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
