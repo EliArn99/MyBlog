@@ -1,9 +1,60 @@
-<!-- templates/category/book_reviews.html -->
 {% extends 'blog/index.html' %}
+{% load static %}
 
 {% block title %}Gaming Reviews{% endblock %}
 
 {% block content %}
-    <h2>Gaming Reviews</h2>
-    <p>Welcome to our gaming reviews section!</p>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Gaming Reviews</h2>
+    <p class="text-center text-muted mb-5">
+        Welcome to our Gaming Reviews section! Dive into the world of gaming as we review the latest games, gaming consoles, accessories, 
+        and everything in between. Whether you're into action-packed adventures, strategy games, or indie hits, we've got something for every gamer.
+        Get ready to discover what’s hot in the gaming world today!
+    </p>
+    <link rel="stylesheet" href="{% static 'category/gaming.css' %}">
+    <!-- Add Review Button (For Logged-In Users) -->
+    {% if user.is_authenticated %}
+    <div class="text-center mb-4">
+        <a href="{% url 'add_review' %}" class="btn btn-success btn-lg">Add Review</a>
+    </div>
+    {% endif %}
+
+    <div class="row gy-4">
+        <!-- Gaming Review 1 -->
+        <div class="col-md-6 col-lg-4 col-sm-12">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/gaming1.jpg' %}" class="card-img-top" alt="Game 1">
+                <div class="card-body">
+                    <h5 class="card-title">Game Title 1</h5>
+                    <p class="card-text">An action-packed game set in an open world, featuring stunning graphics and immersive gameplay.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gaming Review 2 -->
+        <div class="col-md-6 col-lg-4 col-sm-12">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/gaming2.jpg' %}" class="card-img-top" alt="Game 2">
+                <div class="card-body">
+                    <h5 class="card-title">Game Title 2</h5>
+                    <p class="card-text">A thrilling adventure game that combines puzzles, exploration, and combat in a fantasy world.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gaming Review 3 -->
+        <div class="col-md-6 col-lg-4 col-sm-12">
+            <div class="card shadow h-100">
+                <img src="{% static 'images/gaming3.jpg' %}" class="card-img-top" alt="Game 3">
+                <div class="card-body">
+                    <h5 class="card-title">Game Title 3</h5>
+                    <p class="card-text">An intense online multiplayer shooter that keeps you at the edge of your seat with every match.</p>
+                    <a href="#" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
