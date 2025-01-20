@@ -1,0 +1,113 @@
+/* General Layout */
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* About Section */
+.about-section {
+    background: linear-gradient(135deg, #1a1a2e, #ff4c6a);
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+    padding: 50px 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.about-section h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.about-section p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+/* Mission Section */
+.mission-section {
+    background-color: #f4f7fc;
+    padding: 50px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.mission-section h2 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.mission-section p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+}
+
+/* Register Section */
+.register-section {
+    background-color: #1a1a2e;
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    padding: 50px 20px;
+}
+
+.register-section h3 {
+    font-size: 2.2rem;
+    color: #ff4c6a;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.register-section p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: #ddd;
+}
+
+.btn-register {
+    background-color: #ff4c6a;
+    border: none;
+    font-size: 1.2rem;
+    color: #fff;
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-register:hover {
+    background-color: #333;
+    transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .about-section h1 {
+        font-size: 2.5rem;
+    }
+
+    .mission-section h2 {
+        font-size: 2rem;
+    }
+
+    .register-section h3 {
+        font-size: 2rem;
+    }
+}
