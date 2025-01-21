@@ -1,8 +1,10 @@
 # Homepage View
-from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
-from MyBlog.blog.forms import CustomUserCreationForm
+from MyBlog.blog.forms import CustomUserCreationForm, BookReviewForm
+from MyBlog.blog.models import Book
 
 
 def home(request):
@@ -38,7 +40,27 @@ def terms_of_service(request):
 
 
 def book_reviews(request):
-    return render(request, 'category/book_reviews.html')
+    books = Book.objects.all()
+    for book in books:
+        if not book.cover_image:
+            book.cover_image = 'book_covers/default_cover.jpg'  # Assign a default path
+    return render(request, 'category/book_reviews.html', {'books': books})
+
+
+@login_required
+def add_review(request):
+    if request.method == 'POST':
+        form = BookReviewForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('book_reviews')
+    else:
+        form = BookReviewForm()
+    return render(request, 'category/add_review.html', {'form': form})
+
+def book_detail(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    return render(request, 'category/book_detail.html', {'book': book})
 
 def lifestyle(request):
     return render(request, 'category/lifestyle.html')
