@@ -9,6 +9,10 @@ urlpatterns = [
     path('about/', views.about, name='about'),  # About page
     path('terms-of-service/', views.terms_of_service, name='terms_of_service'),  # Services page
     path('category/book-reviews/', views.book_reviews, name='book_reviews'),  # Book Reviews page
+    path('books/', views.book_reviews, name='book_reviews'),
+    path('books/<int:book_id>/', views.book_detail, name='book_detail'),
+    path('books/add/', views.add_review, name='add_review'),
+
     path('category/lifestyle/', views.lifestyle, name='lifestyle'),  # Lifestyle page
     path('category/technology/', views.technology, name='technology'),  # Technology page
     path('category/education/', views.education, name='education'),  # Education & Learning page
