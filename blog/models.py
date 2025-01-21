@@ -136,3 +136,16 @@ class UserFollow(models.Model):
 
     def __str__(self):
         return f"{self.follower.username} follows {self.followed.username}"
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=100)
+    description = models.TextField()
+    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
+    published_date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    category = models.ForeignKey(Category, related_name='books', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
