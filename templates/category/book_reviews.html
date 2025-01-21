@@ -1,18 +1,13 @@
-{% extends 'blog/index.html' %}
-{% load static %}
-
-{% block title %}Book Reviews{% endblock %}
-
 {% block content %}
+    {% load static %}
 <div class="container my-5">
     <h2 class="text-center mb-4">Book Reviews</h2>
+    <link rel="stylesheet" href="{% static 'css/book_details.css'%}">
     <p class="text-center text-muted mb-5">
-        Dive into our curated collection of book reviews, exploring timeless classics, modern bestsellers, 
-        and hidden literary gems. Whether you're a bibliophile or a casual reader, discover stories that inspire, 
-        inform, and entertain. Happy reading!
+        Dive into our curated collection of book reviews, exploring timeless classics, modern bestsellers,
+        and hidden literary gems. Happy reading!
     </p>
-    <link rel="stylesheet" href="{% static 'category/gaming.css' %}">
-    <!-- Add Review Button (For Logged-In Users) -->
+
     {% if user.is_authenticated %}
     <div class="text-center mb-4">
         <a href="{% url 'add_review' %}" class="btn btn-success btn-lg">Add Review</a>
@@ -20,41 +15,20 @@
     {% endif %}
 
     <div class="row gy-4">
-        <!-- Gaming Review 1 -->
+        {% for book in books %}
         <div class="col-md-6 col-lg-4 col-sm-12">
             <div class="card shadow h-100">
-                <img src="{% static 'images/gaming1.jpg' %}" class="card-img-top" alt="Game 1">
-                <div class="card-body">
-                    <h5 class="card-title">Game Title 1</h5>
-                    <p class="card-text">An action-packed game set in an open world, featuring stunning graphics and immersive gameplay.</p>
-                    <a href="#" class="btn btn-primary">Read More</a>
-                </div>
-            </div>
-        </div>
+                <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
 
-        <!-- Gaming Review 2 -->
-        <div class="col-md-6 col-lg-4 col-sm-12">
-            <div class="card shadow h-100">
-                <img src="{% static 'images/gaming2.jpg' %}" class="card-img-top" alt="Game 2">
                 <div class="card-body">
-                    <h5 class="card-title">Game Title 2</h5>
-                    <p class="card-text">A thrilling adventure game that combines puzzles, exploration, and combat in a fantasy world.</p>
-                    <a href="#" class="btn btn-primary">Read More</a>
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text">{{ book.description|truncatechars:150 }}</p>
+                    <p class="text-muted">By {{ book.author }}</p>
+                    <a href="{% url 'book_detail' book.id %}" class="btn btn-primary">Read More</a>
                 </div>
             </div>
         </div>
-
-        <!-- Gaming Review 3 -->
-        <div class="col-md-6 col-lg-4 col-sm-12">
-            <div class="card shadow h-100">
-                <img src="{% static 'images/gaming3.jpg' %}" class="card-img-top" alt="Game 3">
-                <div class="card-body">
-                    <h5 class="card-title">Game Title 3</h5>
-                    <p class="card-text">An intense online multiplayer shooter that keeps you at the edge of your seat with every match.</p>
-                    <a href="#" class="btn btn-primary">Read More</a>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
