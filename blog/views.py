@@ -1,99 +1,97 @@
-# Homepage View
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, get_user_model
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-
-from MyBlog.blog.forms import CustomUserCreationForm, BookReviewForm
-from MyBlog.blog.models import Book
+from .forms import CustomUserCreationForm, ProfileForm, ProfileEditForm
+from django.contrib.auth.models import Permission
 
 
-def home(request):
-    return render(request, 'blog/home.html')
+def assign_permissions_based_on_role(user):
+    if user.role == 'admin':
+        permissions = Permission.objects.all()  # Admin gets all permissions
+    elif user.role == 'author':
+        permissions = Permission.objects.filter(codename='can_create_content')  # Authors can create content
+    elif user.role == 'reader':
+        permissions = Permission.objects.filter(codename='can_read_content')  # Readers can only read content
 
-# Post Detail Page
-def post_detail(request, post_id):
-    return render(request, 'blog/post_detail.html')
-
-# About Page View
-def about(request):
-    return render(request, 'blog/about.html')
-
-# Category Page View
-def category_page(request, category_slug):
-    return render(request, 'blog/category_page.html')
-
-# User Profile Page View
-def user_profile(request, username):
-    return render(request, 'blog/user_profile.html')
-
-# Contact Page View
-def contact(request):
-    return render(request, 'blog/contact.html')
-
-# Privacy Policy Page View
-def privacy_policy(request):
-    return render(request, 'blog/privacy_policy.html')
-
-# Terms of Service Page View
-def terms_of_service(request):
-    return render(request, 'blog/terms_of_service.html')
-
-
-def book_reviews(request):
-    books = Book.objects.all()
-    for book in books:
-        if not book.cover_image:
-            book.cover_image = 'book_covers/default_cover.jpg'  # Assign a default path
-    return render(request, 'category/book_reviews.html', {'books': books})
+    user.user_permissions.set(permissions)  # Assign the permissions to the user
+    user.save()
 
 
 @login_required
-def add_review(request):
+def change_user_role(request, user_id):
+    if request.user.role != 'admin':
+        return redirect('home')  # Ensure only admins can access this view
+
+    user = get_object_or_404(get_user_model(), id=user_id)
     if request.method == 'POST':
-        form = BookReviewForm(request.POST, request.FILES)
+        new_role = request.POST.get('role')
+        user.role = new_role
+        user.save()
+        return redirect('admin_dashboard')  # Redirect to an admin dashboard or users list page
+
+    return render(request, 'blog/change_user_role.html', {'user': user})
+
+# Use this in your registration view
+def register_view(request):
+    if request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('book_reviews')
-    else:
-        form = BookReviewForm()
-    return render(request, 'category/add_review.html', {'form': form})
-
-def book_detail(request, book_id):
-    book = get_object_or_404(Book, id=book_id)
-    return render(request, 'category/book_detail.html', {'book': book})
-
-def lifestyle(request):
-    return render(request, 'category/lifestyle.html')
-
-def technology(request):
-    return render(request, 'category/technology.html')
-
-def education(request):
-    return render(request, 'category/education.html')
-
-def environment(request):
-    return render(request, 'category/environment.html')
-
-def art_and_culture(request):
-    return render(request, 'category/art_and_culture.html')
-
-def gaming(request):
-    return render(request, 'category/gaming.html')
-
-
-
-def login_view(request):
-    return render(request, 'blog/login.html' )
-
-
-
-def register(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Your account has been created successfully! You can now log in.")
-            return redirect('login')
+            user = form.save()
+            assign_permissions_based_on_role(user)  # Assign permissions based on role
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('home')  # Redirect to the homepage or a dashboard
     else:
         form = CustomUserCreationForm()
     return render(request, 'blog/register.html', {'form': form})
+
+
+def author_required(function):
+    return user_passes_test(lambda u: u.role == 'author', login_url='home')(function)
+
+
+@login_required
+@author_required
+def create_content_view(request):
+    # Only accessible by authors
+    return render(request, 'blog/create_content.html')
+
+
+def reader_required(function):
+    return user_passes_test(lambda u: u.role == 'reader', login_url='home')(function)
+
+
+@login_required
+@reader_required
+def read_content_view(request):
+    # Only accessible by readers
+    return render(request, 'blog/read_content.html')
+
+
+@login_required
+def home(request):
+    return render(request, 'blog/home.html', {'user': request.user})
+
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Redirect to the same profile page or another page
+    else:
+        form = ProfileForm(instance=request.user)
+
+    return render(request, 'blog/profile.html', {'form': form})
+
+@login_required
+def profile_edit_view(request):
+    """View to edit the user profile."""
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileEditForm(instance=request.user)
+    return render(request, 'blog/profile_edit.html', {'form': form})
