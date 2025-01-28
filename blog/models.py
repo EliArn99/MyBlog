@@ -1,151 +1,60 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.utils.text import slugify
+from django.db import models
+from django.contrib.auth import get_user_model
+from taggit.managers import TaggableManager
 
 class CustomUser(AbstractUser):
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('author', 'Author'),
+        ('reader', 'Reader'),
+    ]
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='reader')
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
-    location = models.CharField(max_length=100, blank=True, null=True)
-
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='customuser_set',
-        blank=True,
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='customuser_permissions',
-        blank=True,
-    )
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
 
     def __str__(self):
         return self.username
 
+    class Meta:
+        permissions = [
+            ("can_manage_users", "Can manage users"),
+            ("can_create_content", "Can create content"),
+        ]
+
+
+User = get_user_model()
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
 
 
 class Post(models.Model):
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+    ]
     title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=200)  # Increased from 50 to 200
     content = models.TextField()
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    published = models.BooleanField(default=False)
-    category = models.ForeignKey(Category, related_name='posts', on_delete=models.CASCADE)
+    categories = models.ManyToManyField('Category', blank=True)
+    tags = TaggableManager()
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+    dislikes = models.ManyToManyField(User, related_name='disliked_posts', blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')  # Add this field
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_dislikes(self):
+        return self.dislikes.count()
 
     def __str__(self):
         return self.title
 
-
-class Comment(models.Model):
-    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Comment by {self.author.username} on {self.post.title}"
-
-
-class Tag(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
-class PostTag(models.Model):
-    post = models.ForeignKey(Post, related_name='tags', on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, related_name='posts', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.post.title} - {self.tag.name}"
-
-
-class ContactMessage(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Message from {self.name}"
-
-
-class PrivacyPolicy(models.Model):
-    content = models.TextField()
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return "Privacy Policy"
-
-
-class TermsOfService(models.Model):
-    content = models.TextField()
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return "Terms of Service"
-
-
-class PostLike(models.Model):
-    LIKE_CHOICES = (
-        (1, 'Like'),
-        (-1, 'Dislike'),
-    )
-
-    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    status = models.IntegerField(choices=LIKE_CHOICES)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('post', 'user')
-
-    def __str__(self):
-        return f"{self.user.username} - {self.status} on {self.post.title}"
-
-
-class UserFollow(models.Model):
-    follower = models.ForeignKey(CustomUser, related_name='following', on_delete=models.CASCADE)
-    followed = models.ForeignKey(CustomUser, related_name='followers', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('follower', 'followed')
-
-    def __str__(self):
-        return f"{self.follower.username} follows {self.followed.username}"
-
-class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.CharField(max_length=100)
-    description = models.TextField()
-    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
-    published_date = models.DateField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey(Category, related_name='books', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.title
