@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,19 +41,43 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'MyBlog2.blog2',
+    'taggit'
 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # Enables language switching
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # ✅ Add this line
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Добави този ред
 ]
+
+LANGUAGES = [
+    ('en', _('English')),
+    ('fr', _('French')),
+    ('es', _('Spanish')),
+    ('de', _('German')),
+]
+
+# Set the default language
+LANGUAGE_CODE = 'en'
+
+# Define the directory for translation files
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',  # Create a 'locale' directory at the root of your project
+]
+
+
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
+
+LANGUAGE_COOKIE_NAME = 'django_language'
 
 
 ROOT_URLCONF = 'MyBlog2.urls'
@@ -79,9 +105,13 @@ WSGI_APPLICATION = 'MyBlog2.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "blog2",
+        "USER": "Eli",
+        "PASSWORD": "Arnautskaj",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
 
@@ -139,3 +169,13 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# In settings.py, add or modify the email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Media files (for profile pictures)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
