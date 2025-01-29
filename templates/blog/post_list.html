@@ -1,0 +1,49 @@
+{% load i18n %}
+  {% block content %}
+        
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Blog Posts" %}</title>
+</head>
+<body>
+    <h1>{% trans "Blog Posts" %}</h1>
+
+    <!-- Language Selector -->
+    <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <select name="language" onchange="this.form.submit()">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% for lang_code, lang_name in LANGUAGES %}
+                <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ lang_name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'post_list' %}">
+        <input type="text" name="q" placeholder="{% trans 'Search by title, category, or tags' %}" value="{{ query }}">
+        <button type="submit">{% trans "Search" %}</button>
+    </form>
+
+    <a href="{% url 'post_create' %}">{% trans "Create New Post" %}</a>
+
+    <ul>
+        {% if posts %}
+            {% for post in posts %}
+                <div>
+                    <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+                    <p>{{ post.content|truncatewords:20 }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>{% trans "No posts found." %}</p>
+        {% endif %}
+    </ul>
+</body>
+</html>
+{% endblock %}

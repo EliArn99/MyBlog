@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }}</title>
+</head>
+<body>
+    <!-- Post Title -->
+    <h1>{{ post.title }}</h1>
+
+    <!-- Post Metadata -->
+    <p>By {{ post.author }} on {{ post.created_at|date:"Y-m-d" }}</p>
+
+    <!-- Post Content -->
+    <p>{{ post.content }}</p>
+
+    <!-- Post Categories -->
+    <p>Category: {{ post.category }}</p>
+
+    <!-- Post Tags -->
+    <p>Tags: {% for tag in post.tags.all %}{{ tag.name }} {% endfor %}</p>
+
+    <!-- Likes and Dislikes -->
+    <p>Likes: {{ post.total_likes }}</p>
+    <p>Dislikes: {{ post.total_dislikes }}</p>
+
+    <!-- Like/Dislike Buttons -->
+    <a href="{% url 'like_post' post.id %}">
+        {% if user in post.likes.all %}
+            Unlike
+        {% else %}
+            Like
+        {% endif %}
+    </a>
+    <a href="{% url 'dislike_post' post.id %}">
+        {% if user in post.dislikes.all %}
+            Remove Dislike
+        {% else %}
+            Dislike
+        {% endif %}
+    </a>
+
+    <!-- Edit Post Link (if current user is the author) -->
+    {% if request.user == post.author %}
+        <a href="{% url 'post_edit' post.id %}">Edit Post</a>
+    {% endif %}
+</body>
+</html>
