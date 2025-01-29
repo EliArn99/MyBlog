@@ -1,9 +1,16 @@
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserCreationForm, ProfileForm, ProfileEditForm
 from django.contrib.auth.models import Permission
-
+from django.contrib.auth.decorators import login_required
+from .models import Post, Category
+from .forms import PostForm, CategoryForm
+from django.shortcuts import render
+from django.db.models import Q
+from django.utils.translation import gettext as _
+from .models import Post
 
 def assign_permissions_based_on_role(user):
     if user.role == 'admin':
@@ -30,6 +37,7 @@ def change_user_role(request, user_id):
         return redirect('admin_dashboard')  # Redirect to an admin dashboard or users list page
 
     return render(request, 'blog/change_user_role.html', {'user': user})
+
 
 # Use this in your registration view
 def register_view(request):
@@ -84,6 +92,7 @@ def profile_view(request):
 
     return render(request, 'blog/profile.html', {'form': form})
 
+
 @login_required
 def profile_edit_view(request):
     """View to edit the user profile."""
@@ -95,3 +104,78 @@ def profile_edit_view(request):
     else:
         form = ProfileEditForm(instance=request.user)
     return render(request, 'blog/profile_edit.html', {'form': form})
+
+
+
+
+
+
+
+def post_list(request):
+    query = request.GET.get('q', '')
+    posts = Post.objects.filter(status='published')
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) |  # Search in title
+            Q(categories__name__icontains=query) |  # Search in categories
+            Q(tags__name__icontains=query)  # Search in tags
+        ).distinct()
+
+    return render(request, 'blog/post_list.html', {
+        'posts': posts,
+        'query': query,
+    })
+
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user  # Set the logged-in user as the author
+            post.status = 'published'  # Ensure the post is published immediately
+            post.save()
+            form.save_m2m()  # Save tags
+            return redirect('post_list')
+    else:
+        form = PostForm()
+    return render(request, 'blog/post_form.html', {'form': form})
+
+
+@login_required
+def post_edit(request, post_id):
+    post = get_object_or_404(Post, id=post_id, author=request.user)
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_list')
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'blog/post_form.html', {'form': form})
+
+
+@login_required
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id, status='published')
+    return render(request, 'blog/post_detail.html', {'post': post})
+
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user in post.dislikes.all():
+        post.dislikes.remove(request.user)  # Remove from dislikes if already disliked
+    post.likes.add(request.user)  # Add the like
+    return redirect('post_detail', post_id=post.id)
+
+
+@login_required
+def dislike_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)  # Remove from likes if already liked
+    post.dislikes.add(request.user)  # Add the dislike
+    return redirect('post_detail', post_id=post.id)
+
+
