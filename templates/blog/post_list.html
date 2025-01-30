@@ -1,28 +1,7 @@
 {% load i18n %}
-  {% block content %}
-        
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="UTF-8">
-    <title>{% trans "Blog Posts" %}</title>
-</head>
-<body>
-    <h1>{% trans "Blog Posts" %}</h1>
 
-    <!-- Language Selector -->
-    <form action="{% url 'set_language' %}" method="post">
-        {% csrf_token %}
-        <select name="language" onchange="this.form.submit()">
-            {% get_current_language as LANGUAGE_CODE %}
-            {% get_available_languages as LANGUAGES %}
-            {% for lang_code, lang_name in LANGUAGES %}
-                <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
-                    {{ lang_name }}
-                </option>
-            {% endfor %}
-        </select>
-    </form>
+{% block content %}
+    <h1>{% trans "Blog Posts" %}</h1>
 
     <!-- Search Form -->
     <form method="GET" action="{% url 'post_list' %}">
@@ -33,8 +12,8 @@
     <a href="{% url 'post_create' %}">{% trans "Create New Post" %}</a>
 
     <ul>
-        {% if posts %}
-            {% for post in posts %}
+        {% if page_obj %}
+            {% for post in page_obj %}
                 <div>
                     <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
                     <p>{{ post.content|truncatewords:20 }}</p>
@@ -44,6 +23,19 @@
             <p>{% trans "No posts found." %}</p>
         {% endif %}
     </ul>
-</body>
-</html>
+
+    <!-- Pagination Controls -->
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page=1">{% trans "First" %}</a>
+            <a href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>
+        {% endif %}
+
+        <span>{% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %}</a>
+        {% endif %}
+    </div>
 {% endblock %}
