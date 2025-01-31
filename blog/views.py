@@ -1,17 +1,16 @@
 from django.contrib.auth import login, get_user_model
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import redirect, get_object_or_404
 from .forms import CustomUserCreationForm, ProfileForm, ProfileEditForm, CommentForm
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
-from .models import Post, Category
-from .forms import PostForm, CategoryForm
+from .forms import PostForm
 from django.shortcuts import render
 from django.db.models import Q
-from django.utils.translation import gettext as _
 from .models import Post
 from django.core.paginator import Paginator
+from .forms import SignupForm
+
 
 def assign_permissions_based_on_role(user):
     if user.role == 'admin':
@@ -52,6 +51,18 @@ def register_view(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'blog/register.html', {'form': form})
+
+
+def signup_view(request):
+    if request.method == "POST":
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log in the user after registration
+            return redirect("home")  # Redirect to home page
+    else:
+        form = SignupForm()
+    return render(request, "blog//signup.html", {"form": form})
 
 
 def author_required(function):
@@ -107,11 +118,6 @@ def profile_edit_view(request):
     return render(request, 'blog/profile_edit.html', {'form': form})
 
 
-
-
-
-
-
 def post_list(request):
     query = request.GET.get('q', '')
     posts = Post.objects.filter(status='published')
@@ -129,6 +135,7 @@ def post_list(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'blog/post_list.html', {'page_obj': page_obj, 'query': query})
+
 
 def post_create(request):
     if request.method == 'POST':
@@ -197,5 +204,3 @@ def dislike_post(request, post_id):
         post.likes.remove(request.user)  # Remove from likes if already liked
     post.dislikes.add(request.user)  # Add the dislike
     return redirect('post_detail', post_id=post.id)
-
-
