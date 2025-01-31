@@ -1,21 +1,36 @@
 from django.contrib import admin
-from .models import CustomUser, Category, Post, Comment, Tag, PostTag, ContactMessage, PrivacyPolicy, TermsOfService, PostLike, UserFollow
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, Category, Post, Comment
 
-admin.site.register(CustomUser)
-admin.site.register(Category)
-admin.site.register(Post)
-admin.site.register(Comment)
-admin.site.register(Tag)
-admin.site.register(PostTag)
-admin.site.register(ContactMessage)
-admin.site.register(PrivacyPolicy)
-admin.site.register(TermsOfService)
-admin.site.register(PostLike)
-admin.site.register(UserFollow)
-from django.contrib import admin
-from .models import Book
+@admin.register(CustomUser)
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    fieldsets = UserAdmin.fieldsets + (
+        ('Additional information', {'fields': ('role', 'bio', 'profile_picture')}),
+    )
+    list_display = ['username', 'email', 'role', 'is_staff', 'is_active']
+    list_filter = ['role', 'is_staff', 'is_active']
+    search_fields = ['username', 'email']
+    ordering = ['username']
+    filter_horizontal = ()
 
-@admin.register(Book)
-class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'published_date')
-    search_fields = ('title', 'author')
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ('name',)
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'status', 'created_at', 'updated_at')
+    list_filter = ('status', 'created_at', 'author')
+    search_fields = ('title', 'content')
+    ordering = ['created_at']
+    filter_horizontal = ('categories',)
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'post', 'content', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('user__username', 'content')
+
