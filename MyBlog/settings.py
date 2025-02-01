@@ -13,7 +13,6 @@ import os
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -72,13 +71,11 @@ LOCALE_PATHS = [
     BASE_DIR / 'locale',  # Create a 'locale' directory at the root of your project
 ]
 
-
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
 LANGUAGE_COOKIE_NAME = 'django_language'
-
 
 ROOT_URLCONF = 'MyBlog2.urls'
 
@@ -142,6 +139,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Allauth настройки
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
 ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
@@ -158,6 +156,16 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'your-email-password'  # Replace with your email password
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -172,7 +180,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # In settings.py, add or modify the email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
