@@ -1,4 +1,3 @@
-
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import redirect, get_object_or_404
@@ -205,3 +204,27 @@ def dislike_post(request, post_id):
         post.likes.remove(request.user)  # Remove from likes if already liked
     post.dislikes.add(request.user)  # Add the dislike
     return redirect('post_detail', post_id=post.id)
+
+
+def custom_404(request, exception):
+    return render(request, 'blog/404.html', status=404)
+
+
+def dashboard_view(request):
+    """Redirect users to their specific dashboard based on role."""
+
+    # ✅ Check if user is authenticated first
+    if not request.user.is_authenticated:
+        return redirect("login")  # Redirect unauthenticated users to login page
+
+    # ✅ Now it's safe to check user role
+    if hasattr(request.user, "role"):
+        if request.user.role == "reader":
+            return render(request, "dashboard/reader_dashboard.html")
+        elif request.user.role == "author":
+            return render(request, "dashboard/author_dashboard.html")
+        elif request.user.role == "admin":
+            return render(request, "dashboard/admin_dashboard.html")
+
+    # Default fallback
+    return redirect("home")
