@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.views.i18n import set_language
 from django.contrib.auth import views as auth_views
 from . import views
-from .views import signup_view
+from .views import signup_view, dashboard_view
 
 urlpatterns = [
     path('', views.home, name='home'),  # Home page
@@ -35,5 +35,8 @@ urlpatterns = [
 
     # Signup
     path("signup/", signup_view, name="signup"),
+
+    path("dashboard/", dashboard_view, name="dashboard"),
+
     # urls.py
 ]
