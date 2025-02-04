@@ -1,0 +1,45 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+/* Dark Mode */
+.dark-mode {
+    background: #121212;
+    color: white;
+}
+
+/* Reader Dashboard */
+.reader-theme {
+    background: #f4f4f4;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Author Dashboard */
+.author-theme {
+    background: #fff8dc;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Admin Dashboard */
+.admin-theme {
+    background: #e3f2fd;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Images */
+.dashboard-img {
+    width: 250px;
+    height: auto;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
