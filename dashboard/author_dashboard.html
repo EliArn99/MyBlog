@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %}Author Dashboard{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+<div class="author-theme">
+    <h2>Welcome, Author ✍️</h2>
+    <p>Start writing and share your stories with the world!</p>
+    <img src="#" alt="Notebook and Pen" class="dashboard-img">
+</div>
+{% endblock %}
