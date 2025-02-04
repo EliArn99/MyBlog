@@ -26,6 +26,9 @@ SECRET_KEY = 'django-insecure-xj=t#dc(@jk*2f(l^i@-zecuywfv-v+@0n%774ru#6lq9f34d1
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# DEBUG = False  # Make sure this is set to False
+#
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost']  # Add your domain/IP here if in production
 
 # Application definition
 
@@ -70,6 +73,9 @@ LANGUAGE_CODE = 'en'
 LOCALE_PATHS = [
     BASE_DIR / 'locale',  # Create a 'locale' directory at the root of your project
 ]
+
+LOGIN_REDIRECT_URL = "/dashboard/"
+
 
 USE_I18N = True
 USE_L10N = True
