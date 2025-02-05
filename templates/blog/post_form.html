@@ -1,16 +1,22 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Create/Edit Post</title>
+    <link rel="stylesheet" href="{% static 'css/post_create.css' %}">
 </head>
 <body>
-    <h1>Create/Edit Post</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
-    <a href="{% url 'post_list' %}">Back to Posts</a>
+    <div class="form-container">
+        <h1 class="page-title">📝 Create/Edit Post</h1>
+
+        <form method="POST" class="post-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="submit-btn">💾 Save Post</button>
+        </form>
+
+        <a href="{% url 'post_list' %}" class="back-btn">⬅ Back to Posts</a>
+    </div>
 </body>
 </html>
