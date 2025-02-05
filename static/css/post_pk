@@ -91,3 +91,80 @@ h1 {
 .dislike-btn:hover {
     background-color: #c82333;
 }
+
+
+/* Comments Section */
+.comments-section {
+    margin-top: 30px;
+}
+
+.comments-section h2 {
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Individual Comments */
+.comment {
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.comment strong {
+    color: #007bff;
+}
+
+/* Comment Form */
+.comment-form {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.comment-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.comment-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Edit Post Link */
+.edit-post {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #17a2b8;
+    text-decoration: none;
+}
+
+.edit-post:hover {
+    color: #138496;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
