@@ -1,41 +1,47 @@
 {% load i18n %}
-
+{% load static %}
 {% block content %}
-    <h1>{% trans "Blog Posts" %}</h1>
+    <div class="post-container">
+        <h1 class="page-title">{% trans "📖 Blog Posts" %}</h1>
 
-    <!-- Search Form -->
-    <form method="GET" action="{% url 'post_list' %}">
-        <input type="text" name="q" placeholder="{% trans 'Search by title, category, or tags' %}" value="{{ query }}">
-        <button type="submit">{% trans "Search" %}</button>
-    </form>
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'post_list' %}" class="search-form">
+            <input type="text" name="q" placeholder="{% trans '🔍 Search by title, category, or tags' %}" value="{{ query }}">
+            <button type="submit">{% trans "Search" %}</button>
+        </form>
+        <link rel="stylesheet" href="{% static 'css/posts.css' %}">
+        <a href="{% url 'post_create' %}" class="create-post">{% trans "✏️ Create New Post" %}</a>
 
-    <a href="{% url 'post_create' %}">{% trans "Create New Post" %}</a>
+        <div class="post-list">
+            {% if page_obj %}
+                {% for post in page_obj %}
+                    <div class="post-card">
+                        <h2>
+                            <a href="{% url 'post_detail' post.id %}" class="post-title">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                        <p class="post-excerpt">{{ post.content|truncatewords:20 }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-posts">{% trans "No posts found." %}</p>
+            {% endif %}
+        </div>
 
-    <ul>
-        {% if page_obj %}
-            {% for post in page_obj %}
-                <div>
-                    <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
-                    <p>{{ post.content|truncatewords:20 }}</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>{% trans "No posts found." %}</p>
-        {% endif %}
-    </ul>
+        <!-- Pagination Controls -->
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="pagination-btn">{% trans "⏮ First" %}</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">{% trans "⬅ Previous" %}</a>
+            {% endif %}
 
-    <!-- Pagination Controls -->
-    <div>
-        {% if page_obj.has_previous %}
-            <a href="?page=1">{% trans "First" %}</a>
-            <a href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>
-        {% endif %}
+            <span class="page-info">{% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}</span>
 
-        <span>{% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}</span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %}</a>
-        {% endif %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">{% trans "Next ➡" %}</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-btn">{% trans "Last ⏭" %}</a>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
