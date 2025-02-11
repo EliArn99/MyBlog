@@ -6,8 +6,9 @@
 
         <!-- Search Form -->
         <form method="GET" action="{% url 'post_list' %}" class="search-form">
-            <input type="text" name="q" placeholder="{% trans '🔍 Search by title, category, or tags' %}" value="{{ query }}">
-            <button type="submit">{% trans "Search" %}</button>
+            <input type="text" name="q" placeholder="{% trans '🔍 Search by title, category, or tags' %}"
+                   value="{{ query }}">
+            <button type="submit">{% trans "🔎 Search" %}</button>
         </form>
         <link rel="stylesheet" href="{% static 'css/posts.css' %}">
         <a href="{% url 'post_create' %}" class="create-post">{% trans "✏️ Create New Post" %}</a>
