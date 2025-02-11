@@ -1,71 +1,98 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ post.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/post-detail.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-<!-- Post Title -->
-<h1>{{ post.title }}</h1>
+    <div class="post-container">
+        <!-- Post Title -->
+        <h1 class="post-title">{{ post.title }}</h1>
 
-<!-- Post Metadata -->
-<p>By {{ post.author }} on {{ post.created_at|date:"Y-m-d" }}</p>
+        <!-- Post Metadata -->
+        <div class="post-meta">
+            <span class="author">By {{ post.author }}</span>
+            <span class="date">{{ post.created_at|date:"F j, Y" }}</span>
+        </div>
 
-<!-- Post Content -->
-<p>{{ post.content }}</p>
+        <!-- Post Content -->
+        <div class="post-content">
+            <p>{{ post.content }}</p>
+        </div>
 
-<!-- Post Categories -->
-<p>Category: {{ post.category }}</p>
+        <!-- Post Categories and Tags -->
+        <div class="post-tags">
+            <span class="category">Category: {{ post.category }}</span>
+            <span class="tags">Tags: {% for tag in post.tags.all %}{{ tag.name }} {% endfor %}</span>
+        </div>
 
-<!-- Post Tags -->
-<p>Tags: {% for tag in post.tags.all %}{{ tag.name }} {% endfor %}</p>
+        <!-- Likes and Dislikes -->
+        <div class="post-reactions">
+            <span class="likes"><i class="fas fa-thumbs-up"></i> {{ post.total_likes }}</span>
+            <span class="dislikes"><i class="fas fa-thumbs-down"></i> {{ post.total_dislikes }}</span>
+        </div>
 
-<!-- Likes and Dislikes -->
-<p>Likes: {{ post.total_likes }}</p>
-<p>Dislikes: {{ post.total_dislikes }}</p>
+        <!-- Like/Dislike Buttons -->
+        <div class="reaction-buttons">
+            <a href="{% url 'like_post' post.id %}" class="btn-like">
+                {% if user in post.likes.all %}
+                    <i class="fas fa-thumbs-up"></i> Unlike
+                {% else %}
+                    <i class="fas fa-thumbs-up"></i> Like
+                {% endif %}
+            </a>
+            <a href="{% url 'dislike_post' post.id %}" class="btn-dislike">
+                {% if user in post.dislikes.all %}
+                    <i class="fas fa-thumbs-down"></i> Remove Dislike
+                {% else %}
+                    <i class="fas fa-thumbs-down"></i> Dislike
+                {% endif %}
+            </a>
+        </div>
 
-<!-- Like/Dislike Buttons -->
-<a href="{% url 'like_post' post.id %}">
-    {% if user in post.likes.all %}
-        Unlike
-    {% else %}
-        Like
-    {% endif %}
-</a>
-<a href="{% url 'dislike_post' post.id %}">
-    {% if user in post.dislikes.all %}
-        Remove Dislike
-    {% else %}
-        Dislike
-    {% endif %}
-</a>
-<h2>Comments</h2>
-<ul>
-    {% for comment in comments %}
-        <li><strong>{{ comment.user.username }}</strong>: {{ comment.content }}
-            ({{ comment.created_at|date:"F j, Y, g:i a" }})
-        </li>
-    {% empty %}
-        <p>No comments yet. Be the first to comment!</p>
-    {% endfor %}
-</ul>
+        <!-- Comments Section -->
+        <div class="comments-section">
+            <h2>Comments</h2>
+            {% if comments %}
+                <ul class="comments-list">
+                    {% for comment in comments %}
+                        <li class="comment">
+                            <strong>{{ comment.user.username }}</strong>
+                            <p>{{ comment.content }}</p>
+                            <span class="comment-date">{{ comment.created_at|date:"F j, Y, g:i a" }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-comments">No comments yet. Be the first to comment!</p>
+            {% endif %}
+        </div>
 
-<!-- Comment Form -->
-{% if user.is_authenticated %}
-    <h3>Leave a Comment:</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit Comment</button>
-    </form>
-{% else %}
-    <p><a href="{% url 'account_login' %}">Log in</a> to leave a comment.</p>
-{% endif %}
+        <!-- Comment Form -->
+        {% if user.is_authenticated %}
+            <div class="comment-form">
+                <h3>Leave a Comment:</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn-submit">Submit Comment</button>
+                </form>
+            </div>
+        {% else %}
+            <p class="login-prompt"><a href="{% url 'account_login' %}">Log in</a> to leave a comment.</p>
+        {% endif %}
 
-
-<!-- Edit Post Link (if current user is the author) -->
-{% if request.user == post.author %}
-    <a href="{% url 'post_edit' post.id %}">Edit Post</a>
-{% endif %}
+        <!-- Edit Post Link (if current user is the author) -->
+        {% if request.user == post.author %}
+            <div class="edit-post">
+                <a href="{% url 'post_edit' post.id %}" class="btn-edit">Edit Post</a>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
