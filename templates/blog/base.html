@@ -1,68 +1,176 @@
-{% load static %}
+{#{% load static %}#}
+{#<!DOCTYPE html>#}
+{#<html lang="{{ LANGUAGE_CODE }}">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>{% block title %}My Blog{% endblock %}</title>#}
+{#    <link rel="stylesheet" href="{% static 'css/base.css' %}">#}
+{#    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">#}
+{#    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">#}
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">#}
+{#</head>#}
+{#<body>#}
+{#    <div class="container-fluid bg-primary py-3 d-none d-md-block">#}
+{#        <div class="container">#}
+{#            <div class="row">#}
+{#                <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">#}
+{#                    <div class="d-inline-flex align-items-center">#}
+{#                        <a class="text-white pr-3" href="#">FAQs</a>#}
+{#                        <span class="text-white">|</span>#}
+{#                        <a class="text-white px-3" href="#">Help</a>#}
+{#                        <span class="text-white">|</span>#}
+{#                        <a class="text-white pl-3" href="#">Support</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-md-6 text-center text-lg-right">#}
+{#                    <div class="d-inline-flex align-items-center">#}
+{#                        <a class="text-white px-3" href="#">#}
+{#                            <i class="fab fa-facebook-f"></i>#}
+{#                        </a>#}
+{#                        <a class="text-white px-3" href="#">#}
+{#                            <i class="fab fa-twitter"></i>#}
+{#                        </a>#}
+{#                        <a class="text-white px-3" href="#">#}
+{#                            <i class="fab fa-linkedin-in"></i>#}
+{#                        </a>#}
+{#                        <a class="text-white px-3" href="#">#}
+{#                            <i class="fab fa-instagram"></i>#}
+{#                        </a>#}
+{#                        <a class="text-white pl-3" href="#">#}
+{#                            <i class="fab fa-youtube"></i>#}
+{#                        </a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <div class="container-fluid position-relative nav-bar p-0">#}
+{#        <div class="container-lg position-relative p-0 px-lg-3">#}
+{#            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0">#}
+{#                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">#}
+{#                    <div class="navbar-nav ml-auto py-0">#}
+{#                        <a href="#" class="nav-item nav-link active">Home</a>#}
+{#                        <a href="#" class="nav-item nav-link">About</a>#}
+{#                        <a href="#" class="nav-item nav-link">Product</a>#}
+{#                    </div>#}
+{#                    <a href="#" class="navbar-brand mx-5 d-none d-lg-block">#}
+{#                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">The</span>Chronicles</h1>#}
+{#                    </a>#}
+{#                    <div class="navbar-nav mr-auto py-0">#}
+{#                        <a href="#" class="nav-item nav-link">Service</a>#}
+{#                        <a href="#" class="nav-item nav-link">Gallery</a>#}
+{#                        <a href="#" class="nav-item nav-link">Contact</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </nav>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <main class="content-container">#}
+{#        {% block content %}#}
+{#        {% endblock %}#}
+{#    </main>#}
+{##}
+{#    <footer class="site-footer text-center py-3 bg-light">#}
+{#        <p>&copy; 2024 My Blog. Built with ❤️ using Django.</p>#}
+{#    </footer>#}
+{##}
+{#    <script>#}
+{#        document.addEventListener("DOMContentLoaded", () => {#}
+{#            const toggleButton = document.getElementById("theme-toggle");#}
+{#            const body = document.body;#}
+{##}
+{#            if (localStorage.getItem("theme") === "dark") {#}
+{#                body.classList.add("dark-mode");#}
+{#                toggleButton.textContent = "☀️";#}
+{#            }#}
+{##}
+{#            toggleButton.addEventListener("click", () => {#}
+{#                body.classList.toggle("dark-mode");#}
+{#                const theme = body.classList.contains("dark-mode") ? "dark" : "light";#}
+{#                localStorage.setItem("theme", theme);#}
+{#                toggleButton.textContent = theme === "dark" ? "☀️" : "🌙";#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{##}
+{#    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>#}
+{#    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.7/dist/umd/popper.min.js"></script>#}
+{#    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+
+
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="en">
+{% load static %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Blog{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <meta charset="utf-8">
+    <title>The Chronicles</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
 </head>
+
 <body>
-<header>
-    <div class="nav-container">
-        <h1 class="logo">MyBlog</h1>
-        <nav>
-            <a href="{% url 'post_list' %}">📖 Blog Posts</a>
-            <a href="{% url 'post_create' %}">✏️ Create Post</a>
-
-            <!-- User Authentication Links -->
-            {% if user.is_authenticated %}
-                <span class="user-welcome">👋 Welcome, {{ user.username }}!</span>
-                <form action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Logout</button>
-                </form>
-
-            {% else %}
-                <a href="{% url 'login' %}">🔑 Login</a> |
-                <a href="{% url 'signup' %}">📝 Register</a>
-            {% endif %}
-        </nav>
-
-        <!-- Theme Switcher Button -->
-        <button id="theme-toggle">🌙</button>
+    <div class="container-fluid bg-primary py-3 d-none d-md-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="text-white pr-3" href="#">FAQs</a>
+                        <span class="text-white">|</span>
+                        <a class="text-white px-3" href="#">Help</a>
+                        <span class="text-white">|</span>
+                        <a class="text-white pl-3" href="#">Support</a>
+                    </div>
+                </div>
+                <div class="col-md-6 text-center text-lg-right">
+                    <div class="d-inline-flex align-items-center">
+                        <a class="text-white px-3" href="#">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-white px-3" href="#">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="text-white px-3" href="#">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="text-white px-3" href="#">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a class="text-white pl-3" href="#">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</header>
 
-<!-- Animated Page Content -->
-<div class="content-container">
-    {% block content %}
-    {% endblock %}
-</div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const toggleButton = document.getElementById("theme-toggle");
-        const body = document.body;
+    <div class="container-fluid position-relative nav-bar p-0">
+        <div class="container-lg position-relative p-0 px-lg-3">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-lg-0">
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="{% url 'post_create' %}" class="nav-item nav-link active">Create Post</a>
+                        <a href="#" class="nav-item nav-link">About</a>
+                        <a href="#" class="nav-item nav-link">Product</a>
+                    </div>
+                    <a href="#" class="navbar-brand mx-5 d-none d-lg-block">
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">The</span>Chronicles</h1>
+                    </a>
+                    <div class="navbar-nav mr-auto py-0">
+                        <a href="#" class="nav-item nav-link">Service</a>
+                        <a href="#" class="nav-item nav-link">Gallery</a>
+                        <a href="#" class="nav-item nav-link">Contact</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
 
-        // Load saved theme preference
-        if (localStorage.getItem("theme") === "dark") {
-            body.classList.add("dark-mode");
-            toggleButton.textContent = "☀️";
-        }
-
-        toggleButton.addEventListener("click", function () {
-            body.classList.toggle("dark-mode");
-
-            if (body.classList.contains("dark-mode")) {
-                localStorage.setItem("theme", "dark");
-                toggleButton.textContent = "☀️";
-            } else {
-                localStorage.setItem("theme", "light");
-                toggleButton.textContent = "🌙";
-            }
-        });
-    });
-</script>
-</body>
-</html>
