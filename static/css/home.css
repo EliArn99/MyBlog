@@ -1,31 +1,107 @@
+/*body {*/
+/*    background: linear-gradient(to right, #e1cbd7, #c38eb4);*/
+/*    font-family: 'Arial', sans-serif;*/
+/*    text-align: center;*/
+/*}*/
 
-body {
-    background: linear-gradient(to right, #e1cbd7, #c38eb4);
-    font-family: 'Arial', sans-serif;
+/*.welcome-container {*/
+/*    margin-top: 100px;*/
+/*    background: white;*/
+/*    padding: 30px;*/
+/*    border-radius: 12px;*/
+/*    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);*/
+/*    display: inline-block;*/
+/*}*/
+
+/*.welcome-title {*/
+/*    color: #333;*/
+/*    font-size: 28px;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*.welcome-message {*/
+/*    font-size: 18px;*/
+/*    color: #555;*/
+/*}*/
+
+/*.btn-primary {*/
+/*    margin-top: 15px;*/
+/*    padding: 10px 20px;*/
+/*    font-size: 16px;*/
+/*    border-radius: 8px;*/
+/*}*/
+
+#header-carousel {
+    margin-top: -45px;
+}
+
+.carousel {
+    position: relative;
+}
+
+.carousel-inner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.carousel-inner::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.carousel-item {
+    position: relative;
+    display: none;
+    float: left;
+    width: 100%;
+    margin-right: -100%;
+    backface-visibility: hidden;
+    transition: transform 0.6s ease-in-out;
+}
+
+.carousel-item.active {
+    display: block;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.carousel-caption {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    color: #fff;
     text-align: center;
 }
 
-.welcome-container {
-    margin-top: 100px;
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    display: inline-block;
-}
-.welcome-title {
-    color: #333;
-    font-size: 28px;
-    font-weight: bold;
-}
-.welcome-message {
-    font-size: 18px;
-    color: #555;
+.d-flex {
+    display: flex;
 }
 
-.btn-primary {
-    margin-top: 15px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 8px;
+.flex-column {
+    flex-direction: column;
 }
+
+.align-items-center {
+    align-items: center;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.p-3 {
+    padding: 1rem;
+    max-width: 900px;
+}
+
+.text-white {
+    color: #fff;
+}
+
