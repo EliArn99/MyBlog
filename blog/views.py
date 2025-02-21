@@ -1,15 +1,18 @@
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from .forms import CustomUserCreationForm, ProfileForm, ProfileEditForm, CommentForm
 from django.contrib.auth.models import Permission
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
-from django.shortcuts import render
 from django.db.models import Q
 from .models import Post
 from django.core.paginator import Paginator
 from .forms import SignupForm
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
 
 
 def assign_permissions_based_on_role(user):
@@ -85,146 +88,3 @@ def reader_required(function):
 def read_content_view(request):
     # Only accessible by readers
     return render(request, 'blog/read_content.html')
-
-
-@login_required
-def home(request):
-    return render(request, 'blog/home.html', {'user': request.user})
-
-
-@login_required
-def profile_view(request):
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')  # Redirect to the same profile page or another page
-    else:
-        form = ProfileForm(instance=request.user)
-
-    return render(request, 'blog/profile.html', {'form': form})
-
-
-@login_required
-def profile_edit_view(request):
-    """View to edit the user profile."""
-    if request.method == 'POST':
-        form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-    else:
-        form = ProfileEditForm(instance=request.user)
-    return render(request, 'blog/profile_edit.html', {'form': form})
-
-
-def post_list(request):
-    query = request.GET.get('q', '')
-    posts = Post.objects.filter(status='published')
-
-    if query:
-        posts = posts.filter(
-            Q(title__icontains=query) |
-            Q(categories__name__icontains=query) |
-            Q(tags__name__icontains=query)
-        ).distinct()
-
-    # Pagination: 10 posts per page
-    paginator = Paginator(posts, 10)  # Show 10 posts per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, 'blog/post_list.html', {'page_obj': page_obj, 'query': query})
-
-
-def post_create(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user  # Set the logged-in user as the author
-            post.status = 'published'  # Ensure the post is published immediately
-            post.save()
-            form.save_m2m()  # Save tags
-            return redirect('post_list')
-    else:
-        form = PostForm()
-    return render(request, 'blog/post_form.html', {'form': form})
-
-
-@login_required
-def post_edit(request, post_id):
-    post = get_object_or_404(Post, id=post_id, author=request.user)
-    if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            return redirect('post_list')
-    else:
-        form = PostForm(instance=post)
-    return render(request, 'blog/post_form.html', {'form': form})
-
-
-@login_required
-def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    comments = post.comments.all()  # Fetch all comments related to this post
-
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.user = request.user  # Assign the logged-in user
-            comment.save()
-            return redirect('post_detail', post_id=post.id)  # Refresh page
-    else:
-        form = CommentForm()
-
-    return render(request, "blog/post_detail.html", {
-        "post": post,
-        "comments": comments,
-        "form": form,
-    })
-
-
-@login_required
-def like_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if request.user in post.dislikes.all():
-        post.dislikes.remove(request.user)  # Remove from dislikes if already disliked
-    post.likes.add(request.user)  # Add the like
-    return redirect('post_detail', post_id=post.id)
-
-
-@login_required
-def dislike_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if request.user in post.likes.all():
-        post.likes.remove(request.user)  # Remove from likes if already liked
-    post.dislikes.add(request.user)  # Add the dislike
-    return redirect('post_detail', post_id=post.id)
-
-
-def custom_404(request, exception):
-    return render(request, 'blog/404.html', status=404)
-
-
-def dashboard_view(request):
-    """Redirect users to their specific dashboard based on role."""
-
-    # ✅ Check if user is authenticated first
-    if not request.user.is_authenticated:
-        return redirect("login")  # Redirect unauthenticated users to login page
-
-    # ✅ Now it's safe to check user role
-    if hasattr(request.user, "role"):
-        if request.user.role == "reader":
-            return render(request, "dashboard/reader_dashboard.html")
-        elif request.user.role == "author":
-            return render(request, "dashboard/author_dashboard.html")
-        elif request.user.role == "admin":
-            return render(request, "dashboard/admin_dashboard.html")
-
-    # Default fallback
-    return redirect("home")
