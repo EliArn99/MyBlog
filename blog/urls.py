@@ -36,7 +36,12 @@ urlpatterns = [
     # Signup
     path("signup/", signup_view, name="signup"),
 
-    path("dashboard/", dashboard_view, name="dashboard"),
+    path('reader-dashboard/', views.reader_dashboard_view, name='reader_dashboard'),
+
+    # Define other necessary URL patterns
+    path('admin-dashboard/', views.admin_dashboard_view, name='admin_dashboard'),
+    path('author-dashboard/', views.author_dashboard_view, name='author_dashboard'),
+    path('dashboard/', views.dashboard_view, name='dashboard'),
 
     # urls.py
 ]
